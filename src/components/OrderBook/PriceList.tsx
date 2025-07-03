@@ -1,8 +1,7 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store";
-import type { FC } from "react";
-import { formatNumber } from "../../lib/utils";
-import clsx from "clsx";
+import { type FC } from "react";
+import PriceRow from "./PriceRow";
 
 const PriceList: FC<{ side: "SELL" | "BUY" }> = ({ side }) => {
   const [data] = useSelector(
@@ -13,7 +12,7 @@ const PriceList: FC<{ side: "SELL" | "BUY" }> = ({ side }) => {
       return [
         priceData,
         state.orderbook.seqNum,
-        state.orderbook.throttle,
+        state.orderbook.config.throttle,
       ] as const;
     },
     (prev, next) => {
@@ -42,39 +41,23 @@ const PriceList: FC<{ side: "SELL" | "BUY" }> = ({ side }) => {
 
   let accTotal = total;
 
-  const components = rows.map(([key, value]) => {
+  const components = rows.map(([price, size]) => {
     const currTotal = accTotal.toString();
-    const valueNum = Number(value);
+    const sizeNum = Number(size);
 
-    accTotal -= valueNum;
+    accTotal -= sizeNum;
 
-    const bar = valueNum / total;
+    const bar = sizeNum / total;
 
     return (
-      <div
-        key={key}
-        className="grid grid-cols-3 relative hover:bg-quotehover tabular-nums text-sm"
-      >
-        <div
-          className={clsx("text-center", {
-            "text-buy": side === "BUY",
-            "text-sell": side === "SELL",
-          })}
-        >
-          {formatNumber(key)}
-        </div>
-        <div className="text-right">{formatNumber(value)}</div>
-        <div className="text-right">{formatNumber(currTotal)}</div>
-        <div
-          className={clsx("h-full absolute right-0 top-0", {
-            "bg-buy-alpha": side === "BUY",
-            "bg-sell-alpha": side === "SELL",
-          })}
-          style={{
-            width: `${bar * 100}%`,
-          }}
-        />
-      </div>
+      <PriceRow
+        key={price}
+        side={side}
+        price={price}
+        size={size}
+        total={currTotal}
+        barWidth={`${bar * 100}%`}
+      />
     );
   });
 

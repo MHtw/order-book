@@ -6,10 +6,11 @@ import { Provider } from "react-redux";
 import type { OrderBookData, TradeHistoryData } from "../../types";
 import { useTopicStream } from "../../lib/useTopicStream";
 
-const OrderBookContainer: FC<{ symbol: string; throttle?: number }> = ({
-  symbol,
-  throttle = 0,
-}) => {
+const OrderBookContainer: FC<{
+  symbol: string;
+  throttle?: number;
+  highlightNewRow?: boolean;
+}> = ({ symbol, throttle = 0, highlightNewRow = true }) => {
   const { store, lastpriceActions, orderbookActions } = useMemo(() => {
     return createStore(symbol);
   }, [symbol]);
@@ -42,8 +43,13 @@ const OrderBookContainer: FC<{ symbol: string; throttle?: number }> = ({
   });
 
   useEffect(() => {
-    store.dispatch(orderbookActions.setThrottle(throttle));
-  }, [throttle]);
+    store.dispatch(
+      orderbookActions.setConfig({
+        throttle,
+        highlightNewRow,
+      })
+    );
+  }, [throttle, highlightNewRow]);
 
   return (
     <Provider store={store}>
