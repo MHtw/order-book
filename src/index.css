@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@theme {
+  --color-defaultbg: #131b29;
+  --color-defaultfg: #f0f4f8;
+  --color-quotehead: #8698aa;
+  --color-buy: #00b15d;
+  --color-sell: #ff5b5a;
+  --color-quotehover: #1e3059;
+  --color-buy-alpha: rgba(16, 186, 104, 0.12);
+  --color-same-alpha: rgba(134, 152, 170, 0.12);
+  --color-sell-alpha: rgba(255, 90, 90, 0.12);
+  --color-buy-flash: rgba(0, 177, 93, 0.5);
+  --color-sell-flash: rgba(255, 91, 90, 0.5);
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

@@ -4,11 +4,14 @@ import PriceList from "./PriceList";
 
 const OrderBook = () => {
   return (
-    <div className="w-60 grid grid-cols-3">
+    <div className="w-60 flex flex-col text-defaultfg bg-defaultbg gap-1">
+      <div className="text-left font-bold px-2 py-1 border-b border-quotehead/10">
+        Order Book
+      </div>
       <Header />
-      <PriceList side="asks" />
+      <PriceList side="SELL" />
       <LastPrice />
-      <PriceList side="bids" />
+      <PriceList side="BUY" />
     </div>
   );
 };

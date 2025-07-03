@@ -1,12 +1,19 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store";
-import { Fragment } from "react/jsx-runtime";
 import type { FC } from "react";
+import { formatNumber } from "../../lib/utils";
+import clsx from "clsx";
 
-const PriceList: FC<{ side: "asks" | "bids" }> = ({ side }) => {
-  const data = useSelector((state: RootState) => state.orderbook[side]);
+const PriceList: FC<{ side: "SELL" | "BUY" }> = ({ side }) => {
+  const data = useSelector((state: RootState) => {
+    if (side === "BUY") {
+      return state.orderbook.bids;
+    } else {
+      return state.orderbook.asks;
+    }
+  });
 
-  const reverse = side === "bids";
+  const reverse = side === "BUY";
 
   const rows = Object.entries(data)
     .sort(([keyA], [keyB]) =>
@@ -14,21 +21,45 @@ const PriceList: FC<{ side: "asks" | "bids" }> = ({ side }) => {
     )
     .slice(0, 8);
 
-  let total = rows.reduce((acc, cur) => {
+  const total = rows.reduce((acc, cur) => {
     return acc + Number(cur[1]);
   }, 0);
 
-  const components = rows.map(([key, value]) => {
-    const curTotal = total;
+  let accTotal = total;
 
-    total -= Number(value);
+  const components = rows.map(([key, value]) => {
+    const currTotal = accTotal.toString();
+    const valueNum = Number(value);
+
+    accTotal -= valueNum;
+
+    const bar = valueNum / total;
 
     return (
-      <Fragment key={key}>
-        <div className="">{key}</div>
-        <div className="">{value}</div>
-        <div className="">{curTotal}</div>
-      </Fragment>
+      <div
+        key={key}
+        className="grid grid-cols-3 relative hover:bg-quotehover tabular-nums text-sm"
+      >
+        <div
+          className={clsx("text-center", {
+            "text-buy": side === "BUY",
+            "text-sell": side === "SELL",
+          })}
+        >
+          {formatNumber(key)}
+        </div>
+        <div className="text-right">{formatNumber(value)}</div>
+        <div className="text-right">{formatNumber(currTotal)}</div>
+        <div
+          className={clsx("h-full absolute right-0 top-0", {
+            "bg-buy-alpha": side === "BUY",
+            "bg-sell-alpha": side === "SELL",
+          })}
+          style={{
+            width: `${bar * 100}%`,
+          }}
+        />
+      </div>
     );
   });
 
@@ -36,7 +67,7 @@ const PriceList: FC<{ side: "asks" | "bids" }> = ({ side }) => {
     components.reverse();
   }
 
-  return <>{components}</>;
+  return <div className="flex flex-col gap-1 p-1">{components}</div>;
 };
 
 export default PriceList;
