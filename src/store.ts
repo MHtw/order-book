@@ -6,8 +6,8 @@ import {
 import type { HistoryData, OrderBookData } from "./types";
 
 type OrderBookState = {
-  asks: Record<string, number>;
-  bids: Record<string, number>;
+  asks: Record<string, string>;
+  bids: Record<string, string>;
   seqNum: number;
 };
 
@@ -64,7 +64,7 @@ const createOrderbookSlice = (symbol: string) => {
         }
 
         asks.forEach(([price, size]) => {
-          if (size === 0) {
+          if (size === "0") {
             delete state.asks[price];
           } else {
             state.asks[price] = size;
@@ -72,7 +72,7 @@ const createOrderbookSlice = (symbol: string) => {
         });
 
         bids.forEach(([price, size]) => {
-          if (size === 0) {
+          if (size === "0") {
             delete state.bids[price];
           } else {
             state.bids[price] = size;

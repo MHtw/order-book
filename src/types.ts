@@ -12,7 +12,7 @@ export type TradeHistoryData = {
   data: HistoryData[];
 };
 
-export type Quote = [number, number];
+export type Quote = [string, string];
 
 export type OrderBookData = {
   topic: string;
