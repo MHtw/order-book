@@ -38,41 +38,40 @@ const PriceRow: FC<{
   }, [size]);
 
   return (
-    <div
-      className={clsx(
-        "grid grid-cols-3 relative hover:bg-quotehover tabular-nums text-sm",
-        {
+    <div className="hover:bg-quotehover">
+      <div
+        className={clsx("grid grid-cols-3 relative tabular-nums text-sm", {
           "animate-buy-flash": highlightNewRow && side === "BUY",
           "animate-sell-flash": highlightNewRow && side === "SELL",
-        }
-      )}
-    >
-      <div
-        className={clsx("text-center", {
-          "text-buy": side === "BUY",
-          "text-sell": side === "SELL",
         })}
       >
-        {formatNumber(price)}
+        <div
+          className={clsx("text-center", {
+            "text-buy": side === "BUY",
+            "text-sell": side === "SELL",
+          })}
+        >
+          {formatNumber(price)}
+        </div>
+        <div
+          className={clsx("text-right", {
+            "animate-buy-flash": sizeDirection === "up",
+            "animate-sell-flash": sizeDirection === "down",
+          })}
+        >
+          {formatNumber(size)}
+        </div>
+        <div className="text-right">{formatNumber(total)}</div>
+        <div
+          className={clsx("h-full absolute right-0 top-0", {
+            "bg-buy-alpha": side === "BUY",
+            "bg-sell-alpha": side === "SELL",
+          })}
+          style={{
+            width: barWidth,
+          }}
+        />
       </div>
-      <div
-        className={clsx("text-right", {
-          "animate-buy-flash": sizeDirection === "up",
-          "animate-sell-flash": sizeDirection === "down",
-        })}
-      >
-        {formatNumber(size)}
-      </div>
-      <div className="text-right">{formatNumber(total)}</div>
-      <div
-        className={clsx("h-full absolute right-0 top-0", {
-          "bg-buy-alpha": side === "BUY",
-          "bg-sell-alpha": side === "SELL",
-        })}
-        style={{
-          width: barWidth,
-        }}
-      />
     </div>
   );
 };
