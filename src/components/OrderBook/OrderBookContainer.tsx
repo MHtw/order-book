@@ -1,4 +1,4 @@
-import { useMemo, type FC } from "react";
+import { useEffect, useMemo, type FC } from "react";
 import { createStore } from "../../store";
 import { WS_URL, ORDER_BOOK_WS_URL } from "../../constants";
 import OrderBook from "./OrderBook";
@@ -6,7 +6,10 @@ import { Provider } from "react-redux";
 import type { OrderBookData, TradeHistoryData } from "../../types";
 import { useTopicStream } from "../../lib/useTopicStream";
 
-const OrderBookContainer: FC<{ symbol: string }> = ({ symbol }) => {
+const OrderBookContainer: FC<{ symbol: string; throttle?: number }> = ({
+  symbol,
+  throttle = 0,
+}) => {
   const { store, lastpriceActions, orderbookActions } = useMemo(() => {
     return createStore(symbol);
   }, [symbol]);
@@ -37,6 +40,10 @@ const OrderBookContainer: FC<{ symbol: string }> = ({ symbol }) => {
       }
     },
   });
+
+  useEffect(() => {
+    store.dispatch(orderbookActions.setThrottle(throttle));
+  }, [throttle]);
 
   return (
     <Provider store={store}>

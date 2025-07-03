@@ -5,13 +5,28 @@ import { formatNumber } from "../../lib/utils";
 import clsx from "clsx";
 
 const PriceList: FC<{ side: "SELL" | "BUY" }> = ({ side }) => {
-  const data = useSelector((state: RootState) => {
-    if (side === "BUY") {
-      return state.orderbook.bids;
-    } else {
-      return state.orderbook.asks;
+  const [data] = useSelector(
+    (state: RootState) => {
+      const priceData =
+        side === "BUY" ? state.orderbook.bids : state.orderbook.asks;
+
+      return [
+        priceData,
+        state.orderbook.seqNum,
+        state.orderbook.throttle,
+      ] as const;
+    },
+    (prev, next) => {
+      const [prevData, prevSeq] = prev;
+      const [nextData, nextSeq, throttle] = next;
+
+      if (nextSeq > prevSeq + throttle) {
+        return prevData === nextData;
+      }
+
+      return true;
     }
-  });
+  );
 
   const reverse = side === "BUY";
 

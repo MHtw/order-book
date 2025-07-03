@@ -9,6 +9,7 @@ type OrderBookState = {
   asks: Record<string, string>;
   bids: Record<string, string>;
   seqNum: number;
+  throttle: number;
 };
 
 type LastPriceState = {
@@ -25,6 +26,7 @@ const createOrderbookSlice = (symbol: string) => {
     asks: {},
     bids: {},
     seqNum: 0,
+    throttle: 0,
   };
 
   return createSlice({
@@ -80,6 +82,9 @@ const createOrderbookSlice = (symbol: string) => {
         });
 
         state.seqNum = seqNum;
+      },
+      setThrottle: (state, action: PayloadAction<number>) => {
+        state.throttle = action.payload;
       },
     },
   });
