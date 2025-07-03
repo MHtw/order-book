@@ -50,7 +50,10 @@ export const createStream = (url: string) => {
         return;
       }
 
-      const { topic } = msgData;
+      const topic =
+        msgData.topic === "tradeHistoryApi"
+          ? `${msgData.topic}:${msgData.data[0].symbol}` // workaround
+          : msgData.topic;
 
       const topicListeners = instance?.topics.get(topic);
 
