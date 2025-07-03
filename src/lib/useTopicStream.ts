@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { MessageData } from "../types";
 import { createStream, type OnDataCallback } from "./socket";
 
@@ -10,12 +10,16 @@ export const useTopicStream = <T extends MessageData>(args: {
 }) => {
   const { url, topic, onData, pingpong } = args;
 
+  const onDataRef = useRef(onData);
+
+  onDataRef.current = onData;
+
   useEffect(() => {
     const stream = createStream(url, pingpong);
 
     const subscription = stream.subscribe<T>(topic, (...args) => {
       try {
-        onData(...args);
+        onDataRef.current(...args);
       } catch (error) {
         console.error(error);
         subscription.resubscribe();
@@ -25,5 +29,5 @@ export const useTopicStream = <T extends MessageData>(args: {
     return () => {
       subscription.unsubscribe();
     };
-  }, [url, topic, onData]);
+  }, [url, topic]);
 };

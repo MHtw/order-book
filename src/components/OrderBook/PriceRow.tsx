@@ -1,8 +1,8 @@
-import cn from "clsx";
 import { useEffect, useRef, useState, type FC } from "react";
 import { formatNumber } from "../../lib/utils";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store";
+import clsx from "clsx";
 
 const PriceRow: FC<{
   side: "BUY" | "SELL";
@@ -39,7 +39,7 @@ const PriceRow: FC<{
 
   return (
     <div
-      className={cn(
+      className={clsx(
         "grid grid-cols-3 relative hover:bg-quotehover tabular-nums text-sm",
         {
           "animate-buy-flash": highlightNewRow && side === "BUY",
@@ -48,7 +48,7 @@ const PriceRow: FC<{
       )}
     >
       <div
-        className={cn("text-center", {
+        className={clsx("text-center", {
           "text-buy": side === "BUY",
           "text-sell": side === "SELL",
         })}
@@ -56,7 +56,7 @@ const PriceRow: FC<{
         {formatNumber(price)}
       </div>
       <div
-        className={cn("text-right", {
+        className={clsx("text-right", {
           "animate-buy-flash": sizeDirection === "up",
           "animate-sell-flash": sizeDirection === "down",
         })}
@@ -65,7 +65,7 @@ const PriceRow: FC<{
       </div>
       <div className="text-right">{formatNumber(total)}</div>
       <div
-        className={cn("h-full absolute right-0 top-0", {
+        className={clsx("h-full absolute right-0 top-0", {
           "bg-buy-alpha": side === "BUY",
           "bg-sell-alpha": side === "SELL",
         })}
