@@ -24,9 +24,12 @@ const PriceRow: FC<{
     let nextDirection: typeof sizeDirection;
     const prevSize = prevSizeRef.current;
 
-    if (size === prevSize) {
+    const prevSizeNum = Number(prevSize);
+    const sizeNum = Number(size);
+
+    if (sizeNum === prevSizeNum) {
       nextDirection = "same";
-    } else if (size > prevSize) {
+    } else if (sizeNum > prevSizeNum) {
       nextDirection = "up";
     } else {
       nextDirection = "down";
