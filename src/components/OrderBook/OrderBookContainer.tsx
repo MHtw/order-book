@@ -14,6 +14,7 @@ const OrderBookContainer: FC<{ symbol: string }> = ({ symbol }) => {
   useTopicStream<TradeHistoryData>({
     url: WS_URL,
     topic: `tradeHistoryApi:${symbol}`,
+    pingpong: true,
     onData: (msgData) => {
       const lastHistory = msgData.data[0];
 

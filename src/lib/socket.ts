@@ -10,7 +10,7 @@ const instanceMap = new Map<
   }
 >();
 
-export const createStream = (url: string) => {
+export const createStream = (url: string, pingpong?: boolean) => {
   let instance = instanceMap.get(url);
 
   if (!instance) {
@@ -31,17 +31,19 @@ export const createStream = (url: string) => {
       );
     };
 
-    const pingpongInterval = setInterval(() => {
-      if (socket.readyState !== WebSocket.OPEN) {
-        return;
-      }
+    if (pingpong) {
+      const pingpongInterval = setInterval(() => {
+        if (socket.readyState !== WebSocket.OPEN) {
+          return;
+        }
 
-      socket.send(JSON.stringify({ op: "ping" }));
-    }, 1e4);
+        socket.send(JSON.stringify({ op: "ping" }));
+      }, 1e4);
 
-    socket.addEventListener("close", () => {
-      clearInterval(pingpongInterval);
-    });
+      socket.addEventListener("close", () => {
+        clearInterval(pingpongInterval);
+      });
+    }
 
     socket.onmessage = (e) => {
       const msgData = jsonParseSafe(e.data);
