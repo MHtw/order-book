@@ -20,7 +20,7 @@ function App() {
       <div className="flex flex-col gap-2">
         <div className="text-left font-bold">Debug Panel</div>
         <div className="flex items-center gap-1">
-          <label>Speed:</label>
+          <div>Speed:</div>
           <button
             onClick={() => {
               setThrottle(0);
@@ -42,6 +42,9 @@ function App() {
           >
             slow
           </button>
+          <div className="text-xs mx-2">
+            (The speed of the price update, default "instant")
+          </div>
         </div>
         <div className="flex gap-1">
           <input
@@ -52,7 +55,12 @@ function App() {
               setHighlightNewRow(e.target.checked);
             }}
           />
-          <label htmlFor="highlight">Highlight new row</label>
+          <label htmlFor="highlight">
+            Highlight new row
+            <span className="text-xs mx-2">
+              (Uncheck to disable the quote highlight animation)
+            </span>
+          </label>
         </div>
         <div className="flex gap-1 items-center">
           <span>Click</span>
