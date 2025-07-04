@@ -8,7 +8,7 @@ import IconArrowDown from "../../assets/IconArrowDown.svg?react";
 const LastPrice = () => {
   const { data } = useSelector((state: RootState) => state.lastprice);
 
-  const { price } = data ?? {};
+  const { price, timestamp } = data ?? {};
 
   const [direction, setDirection] = useState<"same" | "down" | "up">("same");
 
@@ -33,7 +33,7 @@ const LastPrice = () => {
     prevPriceRef.current = price;
 
     setDirection(nextDirection);
-  }, [price]);
+  }, [price, timestamp]);
 
   return (
     <div
