@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 
 import OrderBook from "./components/OrderBook";
+import GitHubAvatar from "./components/GitHubAvatar";
 
 function App() {
   const [throttle, setThrottle] = useState(0);
@@ -9,6 +10,8 @@ function App() {
 
   return (
     <div className="flex flex-col gap-5 items-center">
+      <GitHubAvatar />
+
       <OrderBook
         symbol="BTCPFC"
         throttle={throttle}
