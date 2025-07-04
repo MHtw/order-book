@@ -6,6 +6,10 @@ export const jsonParseSafe = (str?: string) => {
   }
 };
 
-export const formatNumber = (value: string) => {
+export const formatNumber = (value?: string) => {
+  if (!value) {
+    return "-";
+  }
+
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };

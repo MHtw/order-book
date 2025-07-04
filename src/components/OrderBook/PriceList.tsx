@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../store";
 import { type FC } from "react";
 import PriceRow from "./PriceRow";
+import clsx from "clsx";
 
 const PriceList: FC<{ side: "SELL" | "BUY" }> = ({ side }) => {
   const [data] = useSelector(
@@ -61,11 +62,28 @@ const PriceList: FC<{ side: "SELL" | "BUY" }> = ({ side }) => {
     );
   });
 
-  if (reverse) {
-    components.reverse();
+  while (components.length < 8) {
+    components.push(
+      <PriceRow
+        key={`empty-${components.length}`}
+        side={side}
+        price=""
+        size=""
+        total=""
+        barWidth=""
+      />
+    );
   }
 
-  return <div className="flex flex-col gap-1 p-1">{components}</div>;
+  return (
+    <div
+      className={clsx("flex flex-col gap-1 p-1", {
+        "flex-col-reverse": reverse,
+      })}
+    >
+      {components}
+    </div>
+  );
 };
 
 export default PriceList;

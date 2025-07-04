@@ -46,7 +46,7 @@ const LastPrice = () => {
         }
       )}
     >
-      {typeof price === "number" ? formatNumber(price.toFixed(1)) : ""}
+      {formatNumber(price?.toFixed(1))}
       <IconArrowDown
         className={clsx("size-4", {
           invisible: direction === "same",
