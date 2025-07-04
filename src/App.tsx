@@ -17,7 +17,7 @@ function App() {
 
       <div role="separator" className="border h-px w-full border-gray-500" />
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         <div className="text-left font-bold">Debug Panel</div>
         <div className="flex items-center gap-1">
           <label>Speed:</label>
@@ -53,6 +53,20 @@ function App() {
             }}
           />
           <label htmlFor="highlight">Highlight new row</label>
+        </div>
+        <div className="flex gap-1 items-center">
+          <span>Click</span>
+          <button
+            onClick={() => {
+              // @ts-expect-error debug only
+              globalThis.__DEGUB_ONLY_VALUE_SKIP_ONE_MSG__ = true;
+            }}
+          >
+            skip
+          </button>
+          <span>
+            to skip a socket message for testing the re-subscribe flow
+          </span>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { jsonParseSafe } from "./utils";
+import { isSubscribtionData, jsonParseSafe } from "./utils";
 
 export type OnDataCallback<T = any> = (data: T) => void;
 
@@ -7,6 +7,7 @@ const instanceMap = new Map<
   {
     socket: WebSocket;
     topics: Map<string, Set<OnDataCallback>>;
+    resubscribingTopics: Set<string>;
   }
 >();
 
@@ -16,10 +17,12 @@ export const createStream = (url: string, pingpong?: boolean) => {
   if (!instance) {
     const socket = new WebSocket(url);
     const topics = new Map<string, Set<OnDataCallback>>();
+    const resubscribingTopics = new Set<string>();
 
     instance = {
       socket,
       topics,
+      resubscribingTopics,
     };
 
     socket.onopen = () => {
@@ -104,19 +107,50 @@ export const createStream = (url: string, pingpong?: boolean) => {
 
       return {
         unsubscribe,
-        resubscribe: () => {
-          socket.send(
-            JSON.stringify({
-              op: "unsubscribe",
-              args: [topic],
-            })
-          );
-          socket.send(
-            JSON.stringify({
-              op: "subscribe",
-              args: [topic],
-            })
-          );
+        resubscribe: async () => {
+          const resubscribingTopics = instance.resubscribingTopics;
+
+          if (resubscribingTopics.has(topic)) {
+            return;
+          }
+
+          const action = (event: "subscribe" | "unsubscribe") => {
+            return new Promise<void>((resolve) => {
+              const handleMessage = (e: MessageEvent) => {
+                const msgData = jsonParseSafe(e.data);
+
+                if (!msgData || !isSubscribtionData(msgData)) {
+                  return;
+                }
+
+                if (
+                  msgData.event !== event ||
+                  !msgData.channel.includes(topic)
+                ) {
+                  return;
+                }
+
+                socket.removeEventListener("message", handleMessage);
+                resolve();
+              };
+
+              socket.addEventListener("message", handleMessage);
+
+              socket.send(
+                JSON.stringify({
+                  op: event,
+                  args: [topic],
+                })
+              );
+            });
+          };
+
+          resubscribingTopics.add(topic);
+
+          await action("unsubscribe");
+          await action("subscribe");
+
+          resubscribingTopics.delete(topic);
         },
       };
     },

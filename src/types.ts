@@ -27,4 +27,9 @@ export type OrderBookData = {
   };
 };
 
-export type MessageData = TradeHistoryData | OrderBookData;
+export type SubscriptionData = {
+  event: "subscribe" | "unsubscribe";
+  channel: string[];
+};
+
+export type MessageData = TradeHistoryData | OrderBookData | SubscriptionData;

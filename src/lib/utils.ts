@@ -1,3 +1,5 @@
+import type { MessageData, SubscriptionData } from "../types";
+
 export const jsonParseSafe = (str?: string) => {
   try {
     return str ? JSON.parse(str) : null;
@@ -12,4 +14,13 @@ export const formatNumber = (value?: string) => {
   }
 
   return value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+export const isSubscribtionData = (
+  data: MessageData
+): data is SubscriptionData => {
+  return (
+    "event" in data &&
+    (data.event === "subscribe" || data.event === "unsubscribe")
+  );
 };

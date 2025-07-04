@@ -63,6 +63,14 @@ const createOrderbookSlice = (symbol: string) => {
           prevSeqNum,
         } = action.payload;
 
+        // @ts-expect-error debug only
+        if (globalThis.__DEGUB_ONLY_VALUE_SKIP_ONE_MSG__) {
+          // @ts-expect-error debug only
+          delete globalThis.__DEGUB_ONLY_VALUE_SKIP_ONE_MSG__;
+
+          return;
+        }
+
         if (payloadSymbol !== symbol) {
           throw Error("incorrect symbol");
         }
